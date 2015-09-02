@@ -43,7 +43,7 @@ feature 'restaurants' do
     end
   end
 
-  context 'editing restuarants' do
+  context 'editing restaurants' do
     before {Restaurant.create name: 'KFC'}
 
     scenario 'let a user edit a restuarant' do
