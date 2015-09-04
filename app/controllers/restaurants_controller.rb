@@ -30,6 +30,10 @@ class RestaurantsController < ApplicationController
 
   def edit
     @restaurant = Restaurant.find(params[:id])
+    if current_user.id != @restaurant.user_id
+      flash[:notice] = "Cannot edit this"
+      redirect_to restaurants_path
+    end
   end
 
   def update

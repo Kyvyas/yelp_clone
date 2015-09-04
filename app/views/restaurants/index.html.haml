@@ -1,24 +1,29 @@
-- if @restaurants.any?
-  - @restaurants.each do |restaurant|
-    = link_to restaurant.name, restaurant_path(restaurant)
-      -if restaurant.image_file_name
-      .RestaurantImage
-        = image_tag restaurant.image.url(:thumb)
-    %h3 Average rating: #{restaurant.average_rating.to_i}
-    - if current_user && current_user.id == restaurant.user_id
-      = link_to "Edit #{restaurant.name}", edit_restaurant_path(restaurant)
-      = link_to "Delete #{restaurant.name}", restaurant_path(restaurant), method: :delete
-    = link_to "Review #{restaurant.name}", new_restaurant_review_path(restaurant)
-    - restaurant.reviews.each do |review|
-      %ul
-        %li
-          = review.thoughts
-          %strong= review.rating
-          \/5
-          = link_to "Delete review", restaurant_review_path(restaurant, review), method: :delete
-          = find_reviewer(review).email
+!!!
+%head
+  %meta(charset="UTF-8")
 
-- else
-  No restaurants yet
+%body
+  - if @restaurants.any?
+    - @restaurants.each do |restaurant|
+      = link_to restaurant.name, restaurant_path(restaurant)
+        -if restaurant.image_file_name
+        .RestaurantImage
+          = image_tag restaurant.image.url(:thumb)
+      %h3 Average rating: #{star_rating(restaurant.average_rating)}
+      - if current_user && current_user.id == restaurant.user_id
+        = link_to "Edit #{restaurant.name}", edit_restaurant_path(restaurant)
+        = link_to "Delete #{restaurant.name}", restaurant_path(restaurant), method: :delete
+      = link_to "Review #{restaurant.name}", new_restaurant_review_path(restaurant)
+      - restaurant.reviews.each do |review|
+        %ul
+          %li
+            = review.thoughts
+            %strong= review.rating
+            \/5
+            = link_to "Delete review", restaurant_review_path(restaurant, review), method: :delete
+            = find_reviewer(review).email
 
-%a(href=new_restaurant_path) Add a restaurant
+  - else
+    No restaurants yet
+
+  %a(href=new_restaurant_path) Add a restaurant
