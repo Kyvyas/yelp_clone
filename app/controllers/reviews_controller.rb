@@ -3,7 +3,6 @@ class ReviewsController < ApplicationController
 	def new
 		@restaurant = Restaurant.find(params[:restaurant_id])
 		@review = Review.new
-		p current_user.reviewed_restaurants
 	end
 
 	def review_params

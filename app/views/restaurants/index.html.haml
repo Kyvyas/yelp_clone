@@ -20,8 +20,11 @@
             = review.thoughts
             %strong= review.rating
             \/5
-            = link_to "Delete review", restaurant_review_path(restaurant, review), method: :delete
+            %p= link_to "Endorse Review", review_endorsements_path(review), method: :post
+            %p= pluralize review.endorsements.count, 'endorsement'
+            = link_to "Delete review", review_path(review), method: :delete
             = find_reviewer(review).email
+
 
   - else
     No restaurants yet
