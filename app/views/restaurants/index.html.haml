@@ -20,8 +20,10 @@
             = review.thoughts
             %strong= review.rating
             \/5
-            %p= link_to "Endorse Review", review_endorsements_path(review), method: :post
-            %p= pluralize review.endorsements.count, 'endorsement'
+
+            %p= link_to "Endorse Review", review_endorsements_path(review), class: 'endorsements-link'
+            %span.endorsements_count= review.endorsements.count 
+            = 'endorsement'.pluralize review.endorsements.count
             = link_to "Delete review", review_path(review), method: :delete
             = find_reviewer(review).email
 
