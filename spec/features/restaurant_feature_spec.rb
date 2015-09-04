@@ -23,8 +23,16 @@ feature 'restaurants' do
 
   context 'creating restaurants' do
     scenario 'prompt user to fill out a form, then displays the new restaurant' do
-      visit '/restaurants'
-      click_link 'Add a restaurant'
+      # user = create :user
+      visit '/users/sign_up'
+      fill_in 'Email', with: 'Katya@test.com'
+      fill_in 'Password', with: '12345678'
+      fill_in 'Password confirmation', with: '12345678'
+      click_button 'Sign up'
+      # visit '/users/sign_in'
+      # fill_in 'Email', with: 'katya@test.com'
+      # fill_in 'Password', with: '12345678'
+      visit '/restaurants/new'
       fill_in 'Name', with: 'KFC'
       click_button 'Create Restaurant'
       expect(page).to have_content 'KFC'
@@ -33,6 +41,11 @@ feature 'restaurants' do
 
     context 'an invalid restaurant' do
       it 'does not let you submit a name that is too short' do
+        visit '/users/sign_up'
+        fill_in 'Email', with: 'Katya@test.com'
+        fill_in 'Password', with: '12345678'
+        fill_in 'Password confirmation', with: '12345678'
+        click_button 'Sign up'
         visit '/restaurants'
         click_link 'Add a restaurant'
         fill_in 'Name', with: 'kf'
@@ -47,6 +60,11 @@ feature 'restaurants' do
     let!(:kfc){Restaurant.create(name:'KFC')}
 
     scenario 'lets a user view a restaurant' do
+      visit '/users/sign_up'
+      fill_in 'Email', with: 'Katya@test.com'
+      fill_in 'Password', with: '12345678'
+      fill_in 'Password confirmation', with: '12345678'
+      click_button 'Sign up'
       visit '/restaurants'
       click_link 'KFC'
       expect(page).to have_content 'KFC'
@@ -55,7 +73,17 @@ feature 'restaurants' do
   end
 
   context 'editing restaurants' do
-    before {Restaurant.create name: 'KFC'}
+    
+     before(:each) do
+      visit '/users/sign_up'
+      fill_in 'Email', with: 'Katya@test.com'
+      fill_in 'Password', with: '12345678'
+      fill_in 'Password confirmation', with: '12345678'
+      click_button 'Sign up'
+      visit '/restaurants/new'
+      fill_in 'Name', with: 'KFC'
+      click_button 'Create Restaurant'
+    end
 
     scenario 'let a user edit a restuarant' do
       visit '/restaurants'
@@ -65,17 +93,51 @@ feature 'restaurants' do
       expect(page).to have_content 'Kentucky Fried Chicken'
       expect(current_path).to eq '/restaurants'
     end
+
+    scenario 'user can only edit own restaurants' do
+      visit '/'
+      click_link 'Sign out'
+      visit '/users/sign_up'
+      fill_in 'Email', with: 'Hello@test.com'
+      fill_in 'Password', with: '12345678'
+      fill_in 'Password confirmation', with: '12345678'
+      click_button 'Sign up'
+      visit '/restaurants'
+      expect(page).not_to have_link 'Edit KFC'
+    end
+
   end
 
   context 'deleting restaurants' do
 
-    before {Restaurant.create name: 'KFC'}
+    before(:each) do
+      visit '/users/sign_up'
+      fill_in 'Email', with: 'Katya@test.com'
+      fill_in 'Password', with: '12345678'
+      fill_in 'Password confirmation', with: '12345678'
+      click_button 'Sign up'
+      visit '/restaurants/new'
+      fill_in 'Name', with: 'KFC'
+      click_button 'Create Restaurant'
+    end
 
     scenario 'removes a restaurant when a user creates a delete link' do
       visit '/restaurants'
       click_link 'Delete KFC'
       expect(page).not_to have_content 'KFC'
       expect(page).to have_content 'Restaurant deleted successfully'
+    end
+
+    scenario 'user cannot delete restaurant if they did not create it' do
+      visit '/'
+      click_link 'Sign out'
+      visit '/users/sign_up'
+      fill_in 'Email', with: 'Hello@test.com'
+      fill_in 'Password', with: '12345678'
+      fill_in 'Password confirmation', with: '12345678'
+      click_button 'Sign up'
+      visit '/restaurants'
+      expect(page).not_to have_link('Delete KFC')
     end
   end
 end
