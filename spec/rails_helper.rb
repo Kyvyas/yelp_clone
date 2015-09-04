@@ -7,7 +7,9 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'spec_helper'
 require 'rspec/rails'
 require 'capybara/rails'
-require 'factory_girl'
+require 'factory_girl_rails'
+require_relative './support/review_helpers'
+require_relative './support/restaurant_helpers'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -41,8 +43,8 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
 
-  FactoryGirl.definition_file_paths = %w{./spec/factories}
-  FactoryGirl.find_definitions
+  # FactoryGirl.definition_file_paths = %w{./spec/factories}
+  # FactoryGirl.find_definitions
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and

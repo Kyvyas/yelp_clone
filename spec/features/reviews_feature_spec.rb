@@ -74,4 +74,13 @@ feature 'reviewing' do
 		expect(page).to have_content 'katya@test.com'
 		expect(page).to have_link 'Delete review'
 	end
+
+	scenario 'displays an average rating for all reviews' do
+		user_2 = build(:user_2)
+		leave_review('not good', 3)
+		click_link 'Sign out'
+		sign_up(user_2)
+		leave_review('Great', 5)
+		expect(page).to have_content 'Average rating: 4'
+	end
 end

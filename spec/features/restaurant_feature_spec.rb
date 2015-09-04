@@ -23,15 +23,8 @@ feature 'restaurants' do
 
   context 'creating restaurants' do
     scenario 'prompt user to fill out a form, then displays the new restaurant' do
-      # user = create :user
-      visit '/users/sign_up'
-      fill_in 'Email', with: 'Katya@test.com'
-      fill_in 'Password', with: '12345678'
-      fill_in 'Password confirmation', with: '12345678'
-      click_button 'Sign up'
-      # visit '/users/sign_in'
-      # fill_in 'Email', with: 'katya@test.com'
-      # fill_in 'Password', with: '12345678'
+      user = build :user
+      sign_up(user)
       visit '/restaurants/new'
       fill_in 'Name', with: 'KFC'
       click_button 'Create Restaurant'
@@ -40,15 +33,8 @@ feature 'restaurants' do
     end
 
     scenario 'user can upload image of restaurant' do
-      # user = create :user
-      visit '/users/sign_up'
-      fill_in 'Email', with: 'Katya@test.com'
-      fill_in 'Password', with: '12345678'
-      fill_in 'Password confirmation', with: '12345678'
-      click_button 'Sign up'
-      # visit '/users/sign_in'
-      # fill_in 'Email', with: 'katya@test.com'
-      # fill_in 'Password', with: '12345678'
+      user = build :user
+      sign_up(user)
       visit '/restaurants/new'
       fill_in 'Name', with: 'KFC'
       attach_file("restaurant[image]", "spec/assets_specs/photos/KFC.jpg")
@@ -59,15 +45,8 @@ feature 'restaurants' do
     end
 
      scenario 'image does not display if no image uploaded' do
-      # user = create :user
-      visit '/users/sign_up'
-      fill_in 'Email', with: 'Katya@test.com'
-      fill_in 'Password', with: '12345678'
-      fill_in 'Password confirmation', with: '12345678'
-      click_button 'Sign up'
-      # visit '/users/sign_in'
-      # fill_in 'Email', with: 'katya@test.com'
-      # fill_in 'Password', with: '12345678'
+      user = build :user
+      sign_up(user)
       visit '/restaurants/new'
       fill_in 'Name', with: 'KFC'
       # attach_file("restaurant[image]", "spec/assets_specs/photos/KFC.jpg")
@@ -79,11 +58,8 @@ feature 'restaurants' do
 
     context 'an invalid restaurant' do
       it 'does not let you submit a name that is too short' do
-        visit '/users/sign_up'
-        fill_in 'Email', with: 'Katya@test.com'
-        fill_in 'Password', with: '12345678'
-        fill_in 'Password confirmation', with: '12345678'
-        click_button 'Sign up'
+        user = build :user
+        sign_up(user)
         visit '/restaurants'
         click_link 'Add a restaurant'
         fill_in 'Name', with: 'kf'
@@ -98,11 +74,8 @@ feature 'restaurants' do
     let!(:kfc){Restaurant.create(name:'KFC')}
 
     scenario 'lets a user view a restaurant' do
-      visit '/users/sign_up'
-      fill_in 'Email', with: 'Katya@test.com'
-      fill_in 'Password', with: '12345678'
-      fill_in 'Password confirmation', with: '12345678'
-      click_button 'Sign up'
+      user = build :user
+      sign_up(user)
       visit '/restaurants'
       click_link 'KFC'
       expect(page).to have_content 'KFC'
@@ -113,11 +86,8 @@ feature 'restaurants' do
   context 'editing restaurants' do
 
      before(:each) do
-      visit '/users/sign_up'
-      fill_in 'Email', with: 'Katya@test.com'
-      fill_in 'Password', with: '12345678'
-      fill_in 'Password confirmation', with: '12345678'
-      click_button 'Sign up'
+      user = build :user
+      sign_up(user)
       visit '/restaurants/new'
       fill_in 'Name', with: 'KFC'
       click_button 'Create Restaurant'
@@ -149,11 +119,8 @@ feature 'restaurants' do
   context 'deleting restaurants' do
 
     before(:each) do
-      visit '/users/sign_up'
-      fill_in 'Email', with: 'Katya@test.com'
-      fill_in 'Password', with: '12345678'
-      fill_in 'Password confirmation', with: '12345678'
-      click_button 'Sign up'
+      user = build :user
+      sign_up(user)
       visit '/restaurants/new'
       fill_in 'Name', with: 'KFC'
       click_button 'Create Restaurant'
@@ -167,13 +134,10 @@ feature 'restaurants' do
     end
 
     scenario 'user cannot delete restaurant if they did not create it' do
+      user_2 = build(:user_2)
       visit '/'
       click_link 'Sign out'
-      visit '/users/sign_up'
-      fill_in 'Email', with: 'Hello@test.com'
-      fill_in 'Password', with: '12345678'
-      fill_in 'Password confirmation', with: '12345678'
-      click_button 'Sign up'
+      sign_up(user_2)
       visit '/restaurants'
       expect(page).not_to have_link('Delete KFC')
     end
