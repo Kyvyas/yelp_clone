@@ -39,6 +39,23 @@ feature 'restaurants' do
       expect(current_path).to eq '/restaurants'
     end
 
+    scenario 'user can upload image of restaurant' do
+      # user = create :user
+      visit '/users/sign_up'
+      fill_in 'Email', with: 'Katya@test.com'
+      fill_in 'Password', with: '12345678'
+      fill_in 'Password confirmation', with: '12345678'
+      click_button 'Sign up'
+      # visit '/users/sign_in'
+      # fill_in 'Email', with: 'katya@test.com'
+      # fill_in 'Password', with: '12345678'
+      visit '/restaurants/new'
+      fill_in 'Name', with: 'KFC'
+      attach_file("restaurant[image]", "spec/assets_specs/photos/KFC.jpg")
+      click_button 'Create Restaurant'
+      expect(page).to have_selector 'img'
+    end
+
     context 'an invalid restaurant' do
       it 'does not let you submit a name that is too short' do
         visit '/users/sign_up'
@@ -73,7 +90,7 @@ feature 'restaurants' do
   end
 
   context 'editing restaurants' do
-    
+
      before(:each) do
       visit '/users/sign_up'
       fill_in 'Email', with: 'Katya@test.com'
