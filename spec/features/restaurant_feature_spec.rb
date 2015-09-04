@@ -54,6 +54,27 @@ feature 'restaurants' do
       attach_file("restaurant[image]", "spec/assets_specs/photos/KFC.jpg")
       click_button 'Create Restaurant'
       expect(page).to have_selector 'img'
+      # expect(page.find('.RestaurantImage')['src']).to have_content 'KFC.jpg'
+      # expect(page).to have_xpath("//img[@src='/spec/assets_specs/photos/KFC.jpg?1441369740']")
+    end
+
+     scenario 'image does not display if no image uploaded' do
+      # user = create :user
+      visit '/users/sign_up'
+      fill_in 'Email', with: 'Katya@test.com'
+      fill_in 'Password', with: '12345678'
+      fill_in 'Password confirmation', with: '12345678'
+      click_button 'Sign up'
+      # visit '/users/sign_in'
+      # fill_in 'Email', with: 'katya@test.com'
+      # fill_in 'Password', with: '12345678'
+      visit '/restaurants/new'
+      fill_in 'Name', with: 'KFC'
+      # attach_file("restaurant[image]", "spec/assets_specs/photos/KFC.jpg")
+      click_button 'Create Restaurant'
+      expect(page).not_to have_selector 'img'
+      # expect(page.find('.RestaurantImage')['src']).to have_content 'KFC.jpg'
+      # expect(page).to have_xpath("//img[@src='/spec/assets_specs/photos/KFC.jpg?1441369740']")
     end
 
     context 'an invalid restaurant' do
