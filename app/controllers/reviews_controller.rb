@@ -3,12 +3,7 @@ class ReviewsController < ApplicationController
 	def new
 		@restaurant = Restaurant.find(params[:restaurant_id])
 		@review = Review.new
-	end
-
-	def create
-	  @restaurant = Restaurant.find(params[:restaurant_id])
-	  @restaurant.reviews.create(review_params)
-	  redirect_to restaurants_path
+		p current_user.reviewed_restaurants
 	end
 
 	def review_params
@@ -28,5 +23,15 @@ class ReviewsController < ApplicationController
 	      render :new
 	    end
 	  end
+	end
+
+	def destroy
+		@review = Review.find(params[:id])
+		if current_user.id == @review.user_id
+	    @review.destroy
+	  else
+	  	flash[:notice] = 'You did not write this review'
+	  end
+	  redirect_to restaurants_path
 	end
 end
